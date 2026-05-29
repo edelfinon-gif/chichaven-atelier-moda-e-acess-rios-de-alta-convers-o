@@ -20,9 +20,9 @@ export function SiteFooter() {
             </p>
             <div className="flex gap-4">
               {[Instagram, Facebook, Twitter].map((Icon, idx) => (
-                <a 
-                  key={idx} 
-                  href="#" 
+                <a
+                  key={idx}
+                  href="#"
                   className="h-10 w-10 rounded-full border border-border flex items-center justify-center text-muted-foreground hover:text-white hover:bg-brand-primary hover:border-brand-primary transition-all duration-300"
                 >
                   <Icon className="h-5 w-5" />
@@ -84,7 +84,7 @@ export function SiteFooter() {
               © {currentYear} ChicHaven Atelier LLC. Todos os direitos reservados.
             </p>
             <p className="text-[10px] text-muted-foreground/60 uppercase tracking-wider">
-              CNPJ: 61.528.561/0001-52 | Razão Social: 61.528.561 ADRIELE ALVES DE OLIVEIRA ALENCAR
+              CNPJ: 61.528.561/0001-52 | 61.528.561 ADRIELE ALVES DE OLIVEIRA ALENCAR
             </p>
           </div>
           <div className="flex gap-6 items-center">

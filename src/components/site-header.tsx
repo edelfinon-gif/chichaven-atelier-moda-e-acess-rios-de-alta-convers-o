@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { motion, useScroll, useMotionValueEvent } from 'framer-motion';
 import { ShoppingBag, Search, Menu } from 'lucide-react';
@@ -12,10 +12,15 @@ export function SiteHeader() {
   const [searchOpen, setSearchOpen] = useState(false);
   const [cartOpen, setCartOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
-  const location = useLocation();
+  let location;
+  try {
+    location = useLocation();
+  } catch (e) {
+    location = { pathname: '/', hash: '' };
+  }
   const { scrollY } = useScroll();
   const items = useCartStore((s) => s.items);
-  const totalQuantity = items.reduce((acc, item) => acc + item.quantity, 0);
+  const totalQuantity = useMemo(() => items.reduce((acc, item) => acc + item.quantity, 0), [items]);
   useMotionValueEvent(scrollY, "change", (latest) => {
     setIsScrolled(latest > 50);
   });
@@ -24,8 +29,8 @@ export function SiteHeader() {
       <header
         className={cn(
           "sticky top-0 z-40 w-full border-b transition-all duration-300",
-          isScrolled 
-            ? "h-16 bg-background/95 backdrop-blur-md border-border shadow-sm" 
+          isScrolled
+            ? "h-16 bg-background/95 backdrop-blur-md border-border shadow-sm"
             : "h-20 bg-background border-transparent"
         )}
       >
