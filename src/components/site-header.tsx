@@ -1,15 +1,20 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import { ShoppingBag, Search, Menu } from 'lucide-react';
 import { ThemeToggle } from '@/components/ThemeToggle';
 import { Button } from '@/components/ui/button';
 import { SearchDialog } from './search-dialog';
+import { CartDrawer } from './cart-drawer';
 import { cn } from '@/lib/utils';
+import { useCartStore } from '@/lib/store';
 export function SiteHeader() {
   const [searchOpen, setSearchOpen] = useState(false);
+  const [cartOpen, setCartOpen] = useState(false);
   const location = useLocation();
   const { scrollY } = useScroll();
+  const cartItemsCount = useCartStore((s) => s.items.length);
+  const totalQuantity = useCartStore((s) => s.items.reduce((acc, item) => acc + item.quantity, 0));
   const headerHeight = useTransform(scrollY, [0, 100], ["5rem", "4rem"]);
   const headerBg = useTransform(scrollY, [0, 100], ["rgba(255,255,255,0.8)", "rgba(255,255,255,0.95)"]);
   const headerBlur = useTransform(scrollY, [0, 100], ["8px", "12px"]);
@@ -47,8 +52,8 @@ export function SiteHeader() {
             </div>
             <div className="flex items-center gap-1">
               <div className="hidden sm:flex items-center mr-2">
-                <Button 
-                  variant="ghost" 
+                <Button
+                  variant="ghost"
                   onClick={() => setSearchOpen(true)}
                   className="relative w-9 h-9 sm:w-40 sm:justify-start sm:px-3 sm:py-2 text-muted-foreground hover:bg-muted/50 rounded-full sm:rounded-lg"
                 >
@@ -60,11 +65,18 @@ export function SiteHeader() {
                 </Button>
               </div>
               <ThemeToggle className="static" />
-              <Button variant="ghost" size="icon" className="relative group rounded-full">
+              <Button 
+                variant="ghost" 
+                size="icon" 
+                className="relative group rounded-full"
+                onClick={() => setCartOpen(true)}
+              >
                 <ShoppingBag className="h-5 w-5 transition-transform group-hover:scale-110" />
-                <span className="absolute top-1 right-1 h-4 w-4 bg-brand-primary text-[10px] font-bold text-white flex items-center justify-center rounded-full ring-2 ring-background animate-pulse">
-                  3
-                </span>
+                {totalQuantity > 0 && (
+                  <span className="absolute top-1 right-1 h-4 w-4 bg-brand-primary text-[10px] font-bold text-white flex items-center justify-center rounded-full ring-2 ring-background animate-in fade-in zoom-in duration-300">
+                    {totalQuantity}
+                  </span>
+                )}
               </Button>
               <Button variant="ghost" size="icon" className="lg:hidden rounded-full">
                 <Menu className="h-6 w-6" />
@@ -74,6 +86,7 @@ export function SiteHeader() {
         </div>
       </motion.header>
       <SearchDialog open={searchOpen} onOpenChange={setSearchOpen} />
+      <CartDrawer open={cartOpen} onOpenChange={setCartOpen} />
     </>
   );
 }

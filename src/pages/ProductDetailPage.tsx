@@ -1,17 +1,18 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { 
-  ChevronRight, 
-  Star, 
-  Truck, 
-  RotateCcw, 
-  ShieldCheck, 
-  Heart, 
+import {
+  ChevronRight,
+  Star,
+  Truck,
+  RotateCcw,
+  ShieldCheck,
+  Heart,
   Share2,
   Plus,
   Minus,
-  Loader2
+  Loader2,
+  ArrowLeft
 } from 'lucide-react';
 import { MainLayout } from '@/components/layout/MainLayout';
 import { Button } from '@/components/ui/button';
@@ -23,19 +24,26 @@ import { api } from '@/lib/api-client';
 import { MOCK_PRODUCTS } from '@shared/mock-data';
 import { cn } from '@/lib/utils';
 import { toast } from 'sonner';
+import { useCartStore } from '@/lib/store';
 export function ProductDetailPage() {
   const { id } = useParams();
   const [product, setProduct] = useState<Product | null>(null);
   const [loading, setLoading] = useState(true);
   const [quantity, setQuantity] = useState(1);
   const [selectedColor, setSelectedColor] = useState('');
+  const addItem = useCartStore((s) => s.addItem);
+  const toggleWishlist = useCartStore((s) => s.toggleWishlist);
+  const wishlist = useCartStore((s) => s.wishlist);
+  const isWishlisted = product ? wishlist.includes(product.id) : false;
   useEffect(() => {
     async function fetchProduct() {
       try {
         setLoading(true);
         const data = await api<Product>(`/api/products/${id}`);
         setProduct(data);
-        setSelectedColor(data.colors[0]);
+        if (data.colors && data.colors.length > 0) {
+           setSelectedColor(data.colors[0]);
+        }
         window.scrollTo(0, 0);
       } catch (err) {
         console.error(err);
@@ -45,6 +53,13 @@ export function ProductDetailPage() {
     }
     fetchProduct();
   }, [id]);
+  const handleAddToCart = () => {
+    if (!product) return;
+    for (let i = 0; i < quantity; i++) {
+      addItem(product);
+    }
+    toast.success(`Added ${quantity} ${product.name} to bag`);
+  };
   if (loading) return (
     <MainLayout>
       <div className="flex items-center justify-center min-h-[60vh]">
@@ -54,9 +69,11 @@ export function ProductDetailPage() {
   );
   if (!product) return (
     <MainLayout>
-      <div className="text-center py-32">
+      <div className="text-center py-32 space-y-4">
         <h2 className="text-2xl font-bold">Product not found</h2>
-        <Link to="/" className="text-brand-primary mt-4 inline-block">Back to Shop</Link>
+        <Button asChild variant="outline">
+          <Link to="/"><ArrowLeft className="mr-2 h-4 w-4" /> Back to Shop</Link>
+        </Button>
       </div>
     </MainLayout>
   );
@@ -71,9 +88,8 @@ export function ProductDetailPage() {
         <span className="text-foreground font-medium truncate">{product.name}</span>
       </nav>
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 xl:gap-20">
-        {/* Gallery */}
         <div className="lg:col-span-7 space-y-4">
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0, scale: 0.98 }}
             animate={{ opacity: 1, scale: 1 }}
             className="aspect-[3/4] rounded-3xl overflow-hidden bg-muted shadow-soft"
@@ -88,7 +104,6 @@ export function ProductDetailPage() {
             ))}
           </div>
         </div>
-        {/* Info */}
         <div className="lg:col-span-5 space-y-8">
           <div className="space-y-4">
             <div className="flex items-center justify-between">
@@ -96,7 +111,14 @@ export function ProductDetailPage() {
                 {product.brand}
               </Badge>
               <div className="flex gap-2">
-                <Button variant="ghost" size="icon" className="rounded-full h-10 w-10"><Heart className="h-5 w-5" /></Button>
+                <Button 
+                  variant="ghost" 
+                  size="icon" 
+                  className={cn("rounded-full h-10 w-10", isWishlisted && "text-brand-primary bg-brand-primary/5")}
+                  onClick={() => toggleWishlist(product.id)}
+                >
+                  <Heart className={cn("h-5 w-5", isWishlisted && "fill-current")} />
+                </Button>
                 <Button variant="ghost" size="icon" className="rounded-full h-10 w-10"><Share2 className="h-5 w-5" /></Button>
               </div>
             </div>
@@ -112,8 +134,7 @@ export function ProductDetailPage() {
             </div>
           </div>
           <p className="text-muted-foreground leading-relaxed">
-            {product.description}
-            This premium piece from the {product.brand} collection represents the pinnacle of contemporary design, blending comfort with avant-garde aesthetics.
+            {product.description} This premium piece from the {product.brand} collection represents the pinnacle of contemporary design.
           </p>
           <div className="space-y-6">
             <div>
@@ -140,7 +161,7 @@ export function ProductDetailPage() {
                   <span className="w-12 text-center font-bold">{quantity}</span>
                   <Button variant="ghost" size="icon" onClick={() => setQuantity(quantity + 1)}><Plus className="h-4 w-4" /></Button>
                 </div>
-                <Button className="flex-1 btn-gradient h-12 text-md" onClick={() => toast.success("Added to shopping bag!")}>
+                <Button className="flex-1 btn-gradient h-12 text-md" onClick={handleAddToCart}>
                   Add to Bag
                 </Button>
               </div>

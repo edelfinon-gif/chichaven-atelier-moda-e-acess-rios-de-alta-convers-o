@@ -30,13 +30,13 @@ export function CartDrawer({ open, onOpenChange }: CartDrawerProps) {
           <div className="flex items-center justify-between">
             <SheetTitle className="flex items-center gap-2">
               <ShoppingBag className="h-5 w-5 text-brand-primary" />
-              Sua Sacola ({items.length})
+              Your Bag ({items.length})
             </SheetTitle>
           </div>
           {subtotal > 0 && (
             <div className="mt-4 space-y-2">
               <div className="flex justify-between text-xs font-medium">
-                <span>{subtotal >= freeShippingThreshold ? "Você ganhou Frete Grátis!" : `Faltam R$ ${(freeShippingThreshold - subtotal).toFixed(2)} para Frete Grátis`}</span>
+                <span>{subtotal >= freeShippingThreshold ? "You've earned Free Shipping!" : `Spend $${(freeShippingThreshold - subtotal).toFixed(2)} more for Free Shipping`}</span>
                 <span>{Math.round(shippingProgress)}%</span>
               </div>
               <Progress value={shippingProgress} className="h-1.5 bg-muted" />
@@ -49,12 +49,12 @@ export function CartDrawer({ open, onOpenChange }: CartDrawerProps) {
               <div className="h-20 w-20 rounded-full bg-muted flex items-center justify-center">
                 <ShoppingBag className="h-10 w-10 text-muted-foreground" />
               </div>
-              <h3 className="text-lg font-bold">Sua sacola está vazia</h3>
+              <h3 className="text-lg font-bold">Your bag is empty</h3>
               <p className="text-sm text-muted-foreground max-w-[240px]">
-                Parece que você ainda não adicionou nada à sua sacola.
+                Looks like you haven't added anything to your bag yet.
               </p>
               <Button className="btn-gradient" onClick={() => onOpenChange(false)}>
-                Começar a Comprar
+                Start Shopping
               </Button>
             </div>
           ) : (
@@ -67,7 +67,7 @@ export function CartDrawer({ open, onOpenChange }: CartDrawerProps) {
                   <div className="flex-1 min-w-0 space-y-1">
                     <div className="flex justify-between gap-2">
                       <h4 className="text-sm font-bold truncate">{item.name}</h4>
-                      <span className="text-sm font-bold text-brand-primary">R$ {(item.price * item.quantity).toFixed(2)}</span>
+                      <span className="text-sm font-bold text-brand-primary">${(item.price * item.quantity).toFixed(2)}</span>
                     </div>
                     <p className="text-xs text-muted-foreground">{item.category} • {item.brand}</p>
                     <div className="flex items-center justify-between pt-2">
@@ -95,23 +95,23 @@ export function CartDrawer({ open, onOpenChange }: CartDrawerProps) {
             <div className="space-y-2 w-full">
               <div className="flex justify-between text-sm">
                 <span className="text-muted-foreground">Subtotal</span>
-                <span className="font-bold">R$ {subtotal.toFixed(2)}</span>
+                <span className="font-bold">${subtotal.toFixed(2)}</span>
               </div>
               <div className="flex justify-between text-sm">
-                <span className="text-muted-foreground">Frete</span>
-                <span className="font-bold text-green-600">{subtotal >= freeShippingThreshold ? 'GRÁTIS' : 'R$ 15,00'}</span>
+                <span className="text-muted-foreground">Shipping</span>
+                <span className="font-bold text-green-600">{subtotal >= freeShippingThreshold ? 'FREE' : '$15.00'}</span>
               </div>
               <Separator className="my-2" />
               <div className="flex justify-between text-lg font-bold">
                 <span>Total</span>
-                <span className="text-brand-primary">R$ {(subtotal + (subtotal >= freeShippingThreshold ? 0 : 15)).toFixed(2)}</span>
+                <span className="text-brand-primary">${(subtotal + (subtotal >= freeShippingThreshold ? 0 : 15)).toFixed(2)}</span>
               </div>
             </div>
             <Button className="w-full btn-gradient h-12 text-md">
-              Finalizar Compra <ArrowRight className="ml-2 h-5 w-5" />
+              Checkout Now <ArrowRight className="ml-2 h-5 w-5" />
             </Button>
             <p className="text-[10px] text-center text-muted-foreground">
-              Impostos e taxas calculados no checkout.
+              Taxes and shipping calculated at checkout.
             </p>
           </SheetFooter>
         )}

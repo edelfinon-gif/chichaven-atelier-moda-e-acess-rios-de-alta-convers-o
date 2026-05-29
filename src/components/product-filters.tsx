@@ -4,12 +4,12 @@ import { Label } from '@/components/ui/label';
 import { Slider } from '@/components/ui/slider';
 import { Separator } from '@/components/ui/separator';
 import { Button } from '@/components/ui/button';
-import { X, RotateCcw } from 'lucide-react';
+import { RotateCcw } from 'lucide-react';
 import { cn } from '@/lib/utils';
 interface ProductFiltersProps {
   category: string;
   onCategoryChange: (value: string) => void;
-  priceRange: [number, number];
+  priceRange?: [number, number];
   onPriceRangeChange: (value: [number, number]) => void;
   brand: string;
   onBrandChange: (value: string) => void;
@@ -20,7 +20,7 @@ interface ProductFiltersProps {
 export function ProductFilters({
   category,
   onCategoryChange,
-  priceRange,
+  priceRange = [0, 1000],
   onPriceRangeChange,
   brand,
   onBrandChange,
@@ -28,7 +28,8 @@ export function ProductFilters({
   onColorChange,
   onClear
 }: ProductFiltersProps) {
-  const isFiltered = category !== 'all' || priceRange[0] !== 0 || priceRange[1] !== 1000 || brand !== 'all' || color !== 'all';
+  const safeRange = priceRange ?? [0, 1000];
+  const isFiltered = category !== 'all' || safeRange[0] !== 0 || safeRange[1] !== 1000 || brand !== 'all' || color !== 'all';
   return (
     <div className="space-y-8">
       <div className="flex items-center justify-between">
@@ -56,16 +57,16 @@ export function ProductFilters({
       <div>
         <h4 className="text-xs font-semibold mb-4 text-muted-foreground uppercase">Price Range</h4>
         <div className="px-2">
-          <Slider 
-            value={[priceRange[0], priceRange[1]]} 
-            max={1000} 
-            step={10} 
+          <Slider
+            value={[safeRange[0], safeRange[1]]}
+            max={1000}
+            step={10}
             onValueChange={(vals) => onPriceRangeChange(vals as [number, number])}
-            className="mb-4" 
+            className="mb-4"
           />
           <div className="flex justify-between text-xs text-muted-foreground font-mono">
-            <span>${priceRange[0]}</span>
-            <span>${priceRange[1]}+</span>
+            <span>${safeRange[0]}</span>
+            <span>${safeRange[1]}+</span>
           </div>
         </div>
       </div>
