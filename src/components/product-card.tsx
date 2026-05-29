@@ -1,61 +1,83 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { ShoppingCart, Eye } from 'lucide-react';
-import { Card, CardContent, CardFooter } from '@/components/ui/card';
+import { ShoppingCart, Eye, Plus } from 'lucide-react';
+import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Product } from '@shared/types';
+import { toast } from 'sonner';
 interface ProductCardProps {
   product: Product;
 }
 export function ProductCard({ product }: ProductCardProps) {
   return (
     <motion.div
-      variants={{
-        hidden: { y: 20, opacity: 0 },
-        visible: { y: 0, opacity: 1 }
-      }}
+      layout
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, scale: 0.9 }}
       whileHover={{ y: -8 }}
       className="group"
     >
       <Card className="overflow-hidden border-none shadow-soft hover:shadow-xl transition-all duration-300 bg-card">
-        <div className="relative aspect-[3/4] overflow-hidden">
-          <img 
-            src={product.imageUrl} 
+        <Link to={`/product/${product.id}`} className="block relative aspect-[3/4] overflow-hidden">
+          <img
+            src={product.imageUrl}
             alt={product.name}
-            className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+            className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
           />
           <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-3">
-            <Button size="icon" variant="secondary" className="rounded-full shadow-lg hover:scale-110 transition-transform">
+            <Button size="icon" variant="secondary" className="rounded-full shadow-lg scale-90 group-hover:scale-100 transition-all duration-300">
               <Eye className="h-5 w-5" />
             </Button>
-            <Button size="icon" className="rounded-full btn-gradient shadow-lg hover:scale-110 transition-transform">
+            <Button 
+              size="icon" 
+              className="rounded-full btn-gradient shadow-lg scale-90 group-hover:scale-100 transition-all duration-300"
+              onClick={(e) => {
+                e.preventDefault();
+                toast.success(`${product.name} added to cart`);
+              }}
+            >
               <ShoppingCart className="h-5 w-5" />
             </Button>
           </div>
-          <div className="absolute top-4 right-4">
-             <span className="bg-white/90 dark:bg-black/80 backdrop-blur px-2 py-1 rounded-md text-xs font-bold shadow-sm">
+          <div className="absolute top-4 right-4 pointer-events-none">
+             <span className="bg-white/90 dark:bg-black/80 backdrop-blur px-2 py-1 rounded-md text-[10px] font-bold shadow-sm uppercase tracking-wider text-brand-primary">
                 {product.brand}
              </span>
           </div>
-        </div>
+        </Link>
         <CardContent className="p-5 space-y-2">
           <div className="flex items-start justify-between gap-2">
-            <div>
-              <p className="text-xs font-medium text-brand-primary uppercase tracking-wider">{product.category}</p>
-              <h3 className="text-lg font-bold line-clamp-1">{product.name}</h3>
+            <div className="min-w-0 flex-1">
+              <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">{product.category}</p>
+              <Link to={`/product/${product.id}`} className="hover:text-brand-primary transition-colors">
+                <h3 className="text-lg font-bold line-clamp-1">{product.name}</h3>
+              </Link>
             </div>
             <span className="text-lg font-display font-bold text-brand-primary">
               ${product.price.toFixed(2)}
             </span>
           </div>
-          <div className="flex gap-1.5 pt-1">
-            {product.colors.map((color, idx) => (
-              <div 
-                key={idx} 
-                className="h-3 w-3 rounded-full border border-border"
-                style={{ backgroundColor: color }}
-              />
-            ))}
+          <div className="flex items-center justify-between pt-1">
+            <div className="flex gap-1.5">
+              {product.colors.slice(0, 3).map((color, idx) => (
+                <div
+                  key={idx}
+                  className="h-2.5 w-2.5 rounded-full border border-border/50"
+                  style={{ backgroundColor: color }}
+                />
+              ))}
+              {product.colors.length > 3 && (
+                <span className="text-[8px] font-bold text-muted-foreground">+{product.colors.length - 3}</span>
+              )}
+            </div>
+            <button 
+              onClick={() => toast.success("Quick added to bag")}
+              className="p-1 rounded-md hover:bg-brand-primary/10 text-muted-foreground hover:text-brand-primary transition-all opacity-0 group-hover:opacity-100"
+            >
+              <Plus className="h-4 w-4" />
+            </button>
           </div>
         </CardContent>
       </Card>

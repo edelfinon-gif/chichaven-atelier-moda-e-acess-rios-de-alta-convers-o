@@ -14,11 +14,17 @@ import '@/index.css'
 import { HomePage } from '@/pages/HomePage'
 import { PrivacyPolicy } from '@/pages/PrivacyPolicy'
 import { TermsOfService } from '@/pages/TermsOfService'
+import { ProductDetailPage } from '@/pages/ProductDetailPage'
 const queryClient = new QueryClient();
 const router = createBrowserRouter([
   {
     path: "/",
     element: <HomePage />,
+    errorElement: <RouteErrorBoundary />,
+  },
+  {
+    path: "/product/:id",
+    element: <ProductDetailPage />,
     errorElement: <RouteErrorBoundary />,
   },
   {

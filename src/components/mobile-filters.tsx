@@ -29,17 +29,17 @@ export function MobileFilters(props: MobileFiltersProps) {
       <SheetTrigger asChild>
         <Button variant="outline" size="sm" className="md:hidden flex gap-2">
           <SlidersHorizontal className="h-4 w-4" />
-          Filtros
+          Filters
         </Button>
       </SheetTrigger>
       <SheetContent side="left" className="w-[300px] sm:w-[400px] overflow-y-auto">
         <SheetHeader className="mb-6">
-          <SheetTitle>Filtros</SheetTitle>
+          <SheetTitle>Filters</SheetTitle>
         </SheetHeader>
         <ProductFilters {...props} />
         <SheetFooter className="mt-8">
           <SheetClose asChild>
-            <Button className="w-full btn-gradient">Ver {props.resultsCount} Resultados</Button>
+            <Button className="w-full btn-gradient">Show {props.resultsCount} Results</Button>
           </SheetClose>
         </SheetFooter>
       </SheetContent>
