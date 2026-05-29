@@ -77,7 +77,9 @@ function updateWranglerJsonc() {
 }
 
 function runSetupCommands() {
-    const commands = [];
+    const commands = [
+    "bun add @radix-ui/react-icons@^1.3.0"
+];
     
     if (commands.length === 0) {
         console.log('⊘ No setup commands to run');
