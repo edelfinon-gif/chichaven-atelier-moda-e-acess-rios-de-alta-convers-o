@@ -67,30 +67,58 @@ export function HomePage() {
     'price-low': 'Menor Preço',
     'price-high': 'Maior Preço'
   };
+  const heroContainer = {
+    hidden: { opacity: 0 },
+    show: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.15
+      }
+    }
+  };
+  const heroItem = {
+    hidden: { opacity: 0, y: 30 },
+    show: { opacity: 1, y: 0, transition: { duration: 0.8, ease: "easeOut" } }
+  };
   return (
     <MainLayout>
-      <section className="relative overflow-hidden section-gap">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-          <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} className="space-y-8">
-            <div className="inline-flex items-center rounded-full px-3 py-1 text-sm font-medium bg-brand-primary/10 text-brand-primary ring-1 ring-inset ring-brand-primary/20">
+      <section className="relative overflow-hidden py-12 md:py-20 lg:py-24">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center">
+          <motion.div 
+            variants={heroContainer}
+            initial="hidden"
+            animate="show"
+            className="space-y-8 text-center lg:text-left"
+          >
+            <motion.div variants={heroItem} className="inline-flex items-center rounded-full px-4 py-1.5 text-xs font-bold uppercase tracking-widest bg-brand-primary text-white shadow-primary">
               Nova Coleção 2024
-            </div>
-            <h1 className="text-display-lg">
-              Elegância Reinventada <br />
-              <span className="text-gradient">ChicHaven Atelier</span>
-            </h1>
-            <p className="text-lg text-muted-foreground max-w-lg">
-              Descubra uma curadoria exclusiva de alta costura e acessórios, desenhados para quem aprecia cada detalhe de estilo e qualidade.
-            </p>
-            <div className="flex flex-wrap gap-4">
-              <Button size="lg" className="btn-gradient" onClick={() => document.getElementById('shop')?.scrollIntoView({ behavior: 'smooth' })}>
+            </motion.div>
+            <motion.h1 variants={heroItem} className="text-5xl md:text-6xl lg:text-7xl font-display font-bold tracking-tight leading-[1.1]">
+              Elegância <br />
+              <span className="text-gradient">Reinventada</span>
+            </motion.h1>
+            <motion.p variants={heroItem} className="text-lg md:text-xl text-muted-foreground max-w-lg mx-auto lg:mx-0">
+              Descubra uma curadoria exclusiva de alta costura e acessórios, desenhados para quem aprecia cada detalhe de estilo e qualidade superior.
+            </motion.p>
+            <motion.div variants={heroItem} className="flex flex-wrap justify-center lg:justify-start gap-4">
+              <Button size="lg" className="btn-gradient px-8 h-14 text-md" onClick={() => document.getElementById('shop')?.scrollIntoView({ behavior: 'smooth' })}>
                 Comprar Agora <ArrowRight className="ml-2 h-5 w-5" />
               </Button>
-              <Button size="lg" variant="outline">Ver Lookbook</Button>
-            </div>
+              <Button size="lg" variant="outline" className="px-8 h-14 text-md">Ver Lookbook</Button>
+            </motion.div>
           </motion.div>
-          <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.8, delay: 0.2 }} className="relative aspect-[4/5] lg:aspect-square overflow-hidden rounded-2xl shadow-2xl">
-            <img src="https://images.unsplash.com/photo-1490481651871-ab68de25d43d?q=80&w=1200&auto=format&fit=crop" alt="Moda de Luxo" className="w-full h-full object-cover" />
+          <motion.div 
+            initial={{ opacity: 0, scale: 0.9 }} 
+            animate={{ opacity: 1, scale: 1 }} 
+            transition={{ duration: 1.2, ease: "easeOut" }} 
+            className="relative aspect-square lg:aspect-square overflow-hidden rounded-3xl shadow-2xl group"
+          >
+            <img 
+              src="https://images.unsplash.com/photo-1490481651871-ab68de25d43d?q=80&w=1200&auto=format&fit=crop" 
+              alt="Moda de Luxo" 
+              className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105" 
+            />
+            <div className="absolute inset-0 ring-1 ring-inset ring-black/10 rounded-3xl" />
           </motion.div>
         </div>
       </section>
@@ -103,17 +131,17 @@ export function HomePage() {
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
               <div>
                 <h2 className="text-3xl font-bold tracking-tight">Nossa Coleção</h2>
-                <p className="text-sm text-muted-foreground mt-1">Mostrando {products.length} produtos</p>
+                <p className="text-sm text-muted-foreground mt-1">Mostrando {products.length} produtos premium</p>
               </div>
               <div className="flex items-center gap-3">
                 <MobileFilters {...filterProps} resultsCount={products.length} />
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
-                    <Button variant="outline" size="sm" className="flex gap-2">
+                    <Button variant="outline" size="sm" className="flex gap-2 h-10 px-4">
                       Ordenar por: {sortLabels[sortBy]} <ChevronDown className="h-4 w-4" />
                     </Button>
                   </DropdownMenuTrigger>
-                  <DropdownMenuContent align="end">
+                  <DropdownMenuContent align="end" className="w-48">
                     <DropdownMenuItem onClick={() => setSortBy('newest')}>Mais Recentes</DropdownMenuItem>
                     <DropdownMenuItem onClick={() => setSortBy('price-low')}>Preço: Menor para Maior</DropdownMenuItem>
                     <DropdownMenuItem onClick={() => setSortBy('price-high')}>Preço: Maior para Menor</DropdownMenuItem>

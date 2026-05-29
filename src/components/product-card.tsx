@@ -1,6 +1,6 @@
 import React, { forwardRef } from 'react';
 import { Link } from 'react-router-dom';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { ShoppingCart, Eye, Plus, Heart } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -35,75 +35,83 @@ export const ProductCard = forwardRef<HTMLDivElement, ProductCardProps>(({ produ
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, scale: 0.9 }}
-      whileHover={{ y: -8 }}
+      whileHover={{ y: -12 }}
+      transition={{ duration: 0.4, ease: "easeOut" }}
       className="group"
     >
-      <Card className="overflow-hidden border-none shadow-soft hover:shadow-xl transition-all duration-300 bg-card">
+      <Card className="overflow-hidden border-none shadow-soft hover:shadow-2xl transition-all duration-500 bg-card rounded-2xl">
         <Link to={`/product/${product.id}`} className="block relative aspect-[3/4] overflow-hidden">
           <img
             src={product.imageUrl}
             alt={product.name}
-            className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+            className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110"
           />
-          <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-3">
-            <Button size="icon" variant="secondary" asChild className="rounded-full shadow-lg scale-90 group-hover:scale-100 transition-all duration-300">
+          <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-all duration-300 flex items-center justify-center gap-4">
+            <Button size="icon" variant="secondary" asChild className="rounded-full shadow-xl translate-y-4 group-hover:translate-y-0 transition-all duration-300 delay-75">
               <Link to={`/product/${product.id}`}><Eye className="h-5 w-5" /></Link>
             </Button>
             <Button
               size="icon"
-              className="rounded-full btn-gradient shadow-lg scale-90 group-hover:scale-100 transition-all duration-300"
+              className="rounded-full btn-gradient shadow-xl translate-y-4 group-hover:translate-y-0 transition-all duration-300 delay-150"
               onClick={handleAddToCart}
             >
               <ShoppingCart className="h-5 w-5" />
             </Button>
           </div>
           <div className="absolute top-4 right-4 flex flex-col gap-2">
-             <span className="bg-white/90 dark:bg-black/80 backdrop-blur px-2 py-1 rounded-md text-[10px] font-bold shadow-sm uppercase tracking-wider text-brand-primary">
+             <span className="bg-white/95 dark:bg-black/90 backdrop-blur px-2.5 py-1 rounded-full text-[10px] font-black shadow-sm uppercase tracking-widest text-brand-primary">
                 {product.brand}
              </span>
              <Button
                 variant="ghost"
                 size="icon"
                 className={cn(
-                  "h-8 w-8 rounded-full backdrop-blur-sm transition-all",
-                  isWishlisted ? "bg-brand-primary text-white" : "bg-white/50 text-foreground hover:bg-white"
+                  "h-10 w-10 rounded-full backdrop-blur-md shadow-sm transition-all duration-300",
+                  isWishlisted ? "bg-brand-primary text-white scale-110" : "bg-white/40 text-foreground hover:bg-white/80"
                 )}
                 onClick={handleToggleWishlist}
              >
-                <Heart className={cn("h-4 w-4", isWishlisted && "fill-current")} />
+                <motion.div
+                  animate={isWishlisted ? { scale: [1, 1.4, 1] } : {}}
+                  transition={{ duration: 0.3 }}
+                >
+                  <Heart className={cn("h-5 w-5", isWishlisted && "fill-current")} />
+                </motion.div>
              </Button>
           </div>
         </Link>
-        <CardContent className="p-5 space-y-2">
-          <div className="flex items-start justify-between gap-2">
+        <CardContent className="p-6 space-y-3">
+          <div className="flex items-start justify-between gap-4">
             <div className="min-w-0 flex-1">
-              <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">{product.category}</p>
+              <p className="text-[10px] font-black text-muted-foreground uppercase tracking-[0.2em] mb-1">{product.category}</p>
               <Link to={`/product/${product.id}`} className="hover:text-brand-primary transition-colors">
-                <h3 className="text-lg font-bold line-clamp-1">{product.name}</h3>
+                <h3 className="text-lg font-bold line-clamp-1 leading-tight">{product.name}</h3>
               </Link>
             </div>
-            <span className="text-lg font-display font-bold text-brand-primary">
+            <span className="text-xl font-display font-black text-brand-primary whitespace-nowrap">
               R$ {product.price.toFixed(2)}
             </span>
           </div>
-          <div className="flex items-center justify-between pt-1">
-            <div className="flex gap-1.5">
+          <div className="flex items-center justify-between pt-2">
+            <div className="flex gap-2">
               {(product.colors || []).slice(0, 3).map((color, idx) => (
                 <div
                   key={idx}
-                  className="h-2.5 w-2.5 rounded-full border border-border/50"
+                  className="h-3.5 w-3.5 rounded-full border border-border/50 ring-1 ring-transparent hover:ring-brand-primary transition-all cursor-help"
                   style={{ backgroundColor: color }}
+                  title={color}
                 />
               ))}
               {(product?.colors?.length ?? 0) > 3 && (
-                <span className="text-[8px] font-bold text-muted-foreground">+{product.colors.length - 3}</span>
+                <span className="text-[10px] font-bold text-muted-foreground flex items-center">+{product.colors.length - 3}</span>
               )}
             </div>
             <button
               onClick={handleAddToCart}
-              className="p-1 rounded-md hover:bg-brand-primary/10 text-muted-foreground hover:text-brand-primary transition-all md:opacity-0 group-hover:opacity-100"
+              className="p-1.5 rounded-full hover:bg-brand-primary/10 text-muted-foreground hover:text-brand-primary transition-all md:opacity-0 group-hover:opacity-100"
+              aria-label="Adicionar rápido"
             >
-              <Plus className="h-4 w-4" />
+              <Plus className="h-5 w-5" />
             </button>
           </div>
         </CardContent>
