@@ -20,13 +20,13 @@ export const ProductCard = forwardRef<HTMLDivElement, ProductCardProps>(({ produ
     e.preventDefault();
     e.stopPropagation();
     addItem(product);
-    toast.success(`${product.name} added to bag`);
+    toast.success(`${product.name} adicionado à sacola`);
   };
   const handleToggleWishlist = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
     toggleWishlist(product.id);
-    toast(isWishlisted ? "Removed from wishlist" : "Added to wishlist");
+    toast(isWishlisted ? "Removido da lista de desejos" : "Adicionado à lista de desejos");
   };
   return (
     <motion.div
@@ -83,7 +83,7 @@ export const ProductCard = forwardRef<HTMLDivElement, ProductCardProps>(({ produ
               </Link>
             </div>
             <span className="text-lg font-display font-bold text-brand-primary">
-              ${product.price.toFixed(2)}
+              R$ {product.price.toFixed(2)}
             </span>
           </div>
           <div className="flex items-center justify-between pt-1">

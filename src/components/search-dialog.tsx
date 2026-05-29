@@ -1,6 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Search } from 'lucide-react';
 import {
   CommandDialog,
   CommandEmpty,
@@ -29,15 +28,15 @@ export function SearchDialog({ open, onOpenChange }: { open: boolean; onOpenChan
   };
   return (
     <CommandDialog open={open} onOpenChange={onOpenChange}>
-      <CommandInput placeholder="Search products, brands, categories..." />
+      <CommandInput placeholder="Pesquisar produtos, marcas, categorias..." />
       <CommandList>
-        <CommandEmpty>No results found.</CommandEmpty>
-        <CommandGroup heading="Suggestions">
-          <CommandItem onSelect={() => navigate('/#shop')}>New Arrivals</CommandItem>
-          <CommandItem onSelect={() => navigate('/#shop')}>Best Sellers</CommandItem>
+        <CommandEmpty>Nenhum resultado encontrado.</CommandEmpty>
+        <CommandGroup heading="Sugestões">
+          <CommandItem onSelect={() => { onOpenChange(false); navigate('/#shop'); }}>Novidades</CommandItem>
+          <CommandItem onSelect={() => { onOpenChange(false); navigate('/#shop'); }}>Mais Vendidos</CommandItem>
         </CommandGroup>
         <CommandSeparator />
-        <CommandGroup heading="Products">
+        <CommandGroup heading="Produtos">
           {MOCK_PRODUCTS.map((product) => (
             <CommandItem
               key={product.id}

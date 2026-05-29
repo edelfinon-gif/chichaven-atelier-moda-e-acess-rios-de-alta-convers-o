@@ -58,7 +58,7 @@ export function ProductDetailPage() {
     for (let i = 0; i < quantity; i++) {
       addItem(product);
     }
-    toast.success(`Added ${quantity} ${product.name} to bag`);
+    toast.success(`Adicionado ${quantity} ${product.name} à sacola`);
   };
   if (loading) return (
     <MainLayout>
@@ -70,9 +70,9 @@ export function ProductDetailPage() {
   if (!product) return (
     <MainLayout>
       <div className="text-center py-32 space-y-4">
-        <h2 className="text-2xl font-bold">Product not found</h2>
+        <h2 className="text-2xl font-bold">Produto não encontrado</h2>
         <Button asChild variant="outline">
-          <Link to="/"><ArrowLeft className="mr-2 h-4 w-4" /> Back to Shop</Link>
+          <Link to="/"><ArrowLeft className="mr-2 h-4 w-4" /> Voltar para a Loja</Link>
         </Button>
       </div>
     </MainLayout>
@@ -81,7 +81,7 @@ export function ProductDetailPage() {
   return (
     <MainLayout>
       <nav className="flex items-center gap-2 text-sm text-muted-foreground py-8">
-        <Link to="/" className="hover:text-brand-primary">Home</Link>
+        <Link to="/" className="hover:text-brand-primary">Início</Link>
         <ChevronRight className="h-4 w-4" />
         <Link to="/#shop" className="hover:text-brand-primary">{product.category}</Link>
         <ChevronRight className="h-4 w-4" />
@@ -89,20 +89,9 @@ export function ProductDetailPage() {
       </nav>
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 xl:gap-20">
         <div className="lg:col-span-7 space-y-4">
-          <motion.div
-            initial={{ opacity: 0, scale: 0.98 }}
-            animate={{ opacity: 1, scale: 1 }}
-            className="aspect-[3/4] rounded-3xl overflow-hidden bg-muted shadow-soft"
-          >
+          <motion.div initial={{ opacity: 0, scale: 0.98 }} animate={{ opacity: 1, scale: 1 }} className="aspect-[3/4] rounded-3xl overflow-hidden bg-muted shadow-soft">
             <img src={product.imageUrl} alt={product.name} className="w-full h-full object-cover" />
           </motion.div>
-          <div className="grid grid-cols-4 gap-4">
-            {[1, 2, 3, 4].map((i) => (
-              <div key={i} className="aspect-square rounded-xl overflow-hidden bg-muted border border-border/50 opacity-60 hover:opacity-100 transition-opacity cursor-pointer">
-                <img src={product.imageUrl} alt="" className="w-full h-full object-cover" />
-              </div>
-            ))}
-          </div>
         </div>
         <div className="lg:col-span-5 space-y-8">
           <div className="space-y-4">
@@ -111,9 +100,9 @@ export function ProductDetailPage() {
                 {product.brand}
               </Badge>
               <div className="flex gap-2">
-                <Button 
-                  variant="ghost" 
-                  size="icon" 
+                <Button
+                  variant="ghost"
+                  size="icon"
                   className={cn("rounded-full h-10 w-10", isWishlisted && "text-brand-primary bg-brand-primary/5")}
                   onClick={() => toggleWishlist(product.id)}
                 >
@@ -124,21 +113,21 @@ export function ProductDetailPage() {
             </div>
             <h1 className="text-4xl font-bold tracking-tight">{product.name}</h1>
             <div className="flex items-center gap-4">
-              <span className="text-3xl font-display font-bold text-brand-primary">${product.price.toFixed(2)}</span>
+              <span className="text-3xl font-display font-bold text-brand-primary">R$ {product.price.toFixed(2)}</span>
               <div className="flex items-center gap-1">
                 {[1, 2, 3, 4, 5].map((s) => (
                   <Star key={s} className="h-4 w-4 fill-brand-primary text-brand-primary" />
                 ))}
-                <span className="text-sm text-muted-foreground ml-2">(48 Reviews)</span>
+                <span className="text-sm text-muted-foreground ml-2">(48 Avaliações)</span>
               </div>
             </div>
           </div>
           <p className="text-muted-foreground leading-relaxed">
-            {product.description} This premium piece from the {product.brand} collection represents the pinnacle of contemporary design.
+            {product.description} Esta peça premium da coleção {product.brand} representa o auge do design contemporâneo e sofisticação.
           </p>
           <div className="space-y-6">
             <div>
-              <h4 className="text-sm font-bold uppercase tracking-wider mb-4">Color</h4>
+              <h4 className="text-sm font-bold uppercase tracking-wider mb-4">Cor</h4>
               <div className="flex gap-3">
                 {product.colors.map((c) => (
                   <button
@@ -154,7 +143,7 @@ export function ProductDetailPage() {
               </div>
             </div>
             <div>
-              <h4 className="text-sm font-bold uppercase tracking-wider mb-4">Quantity</h4>
+              <h4 className="text-sm font-bold uppercase tracking-wider mb-4">Quantidade</h4>
               <div className="flex items-center gap-4">
                 <div className="flex items-center border border-border rounded-xl px-2 py-1">
                   <Button variant="ghost" size="icon" onClick={() => setQuantity(Math.max(1, quantity - 1))}><Minus className="h-4 w-4" /></Button>
@@ -162,7 +151,7 @@ export function ProductDetailPage() {
                   <Button variant="ghost" size="icon" onClick={() => setQuantity(quantity + 1)}><Plus className="h-4 w-4" /></Button>
                 </div>
                 <Button className="flex-1 btn-gradient h-12 text-md" onClick={handleAddToCart}>
-                  Add to Bag
+                  Adicionar à Sacola
                 </Button>
               </div>
             </div>
@@ -171,24 +160,24 @@ export function ProductDetailPage() {
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
             <div className="flex flex-col items-center text-center space-y-2">
               <Truck className="h-6 w-6 text-brand-primary" />
-              <span className="text-xs font-semibold">Free Shipping</span>
-              <span className="text-[10px] text-muted-foreground">On orders over $150</span>
+              <span className="text-xs font-semibold">Frete Grátis</span>
+              <span className="text-[10px] text-muted-foreground">Em pedidos acima de R$ 150</span>
             </div>
             <div className="flex flex-col items-center text-center space-y-2">
               <RotateCcw className="h-6 w-6 text-brand-primary" />
-              <span className="text-xs font-semibold">30-Day Returns</span>
-              <span className="text-[10px] text-muted-foreground">Hassle-free process</span>
+              <span className="text-xs font-semibold">Devolução 30 Dias</span>
+              <span className="text-[10px] text-muted-foreground">Processo sem burocracia</span>
             </div>
             <div className="flex flex-col items-center text-center space-y-2">
               <ShieldCheck className="h-6 w-6 text-brand-primary" />
-              <span className="text-xs font-semibold">Secure Payment</span>
-              <span className="text-[10px] text-muted-foreground">Certified gateway</span>
+              <span className="text-xs font-semibold">Pagamento Seguro</span>
+              <span className="text-[10px] text-muted-foreground">Certificação internacional</span>
             </div>
           </div>
         </div>
       </div>
       <section className="section-gap border-t border-border mt-20">
-        <h2 className="text-3xl font-bold mb-10">You May Also Like</h2>
+        <h2 className="text-3xl font-bold mb-10">Você também pode gostar</h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
           {relatedProducts.map(p => (
             <ProductCard key={p.id} product={p} />

@@ -13,7 +13,6 @@ export function SiteHeader() {
   const [cartOpen, setCartOpen] = useState(false);
   const location = useLocation();
   const { scrollY } = useScroll();
-  const cartItemsCount = useCartStore((s) => s.items.length);
   const totalQuantity = useCartStore((s) => s.items.reduce((acc, item) => acc + item.quantity, 0));
   const headerHeight = useTransform(scrollY, [0, 100], ["5rem", "4rem"]);
   const headerBg = useTransform(scrollY, [0, 100], ["rgba(255,255,255,0.8)", "rgba(255,255,255,0.95)"]);
@@ -36,16 +35,21 @@ export function SiteHeader() {
                 </span>
               </Link>
               <nav className="hidden lg:flex items-center gap-8">
-                {['Shop', 'Categories', 'Collections', 'About'].map((item) => (
+                {[
+                  { name: 'Loja', hash: '#shop' },
+                  { name: 'Categorias', hash: '#' },
+                  { name: 'Coleções', hash: '#' },
+                  { name: 'Sobre', hash: '#' }
+                ].map((item) => (
                   <Link
-                    key={item}
-                    to={item === 'Shop' ? '/#shop' : '#'}
+                    key={item.name}
+                    to={item.hash === '#shop' ? '/#shop' : '/'}
                     className={cn(
                       "text-sm font-semibold tracking-wide transition-colors hover:text-brand-primary",
-                      location.hash === `#${item.toLowerCase()}` ? "text-brand-primary" : "text-muted-foreground"
+                      location.hash === item.hash ? "text-brand-primary" : "text-muted-foreground"
                     )}
                   >
-                    {item}
+                    {item.name}
                   </Link>
                 ))}
               </nav>
@@ -58,16 +62,16 @@ export function SiteHeader() {
                   className="relative w-9 h-9 sm:w-40 sm:justify-start sm:px-3 sm:py-2 text-muted-foreground hover:bg-muted/50 rounded-full sm:rounded-lg"
                 >
                   <Search className="h-4 w-4 sm:mr-2" />
-                  <span className="hidden sm:inline text-xs">Search...</span>
+                  <span className="hidden sm:inline text-xs">Pesquisar...</span>
                   <kbd className="hidden sm:inline-flex absolute right-2 pointer-events-none items-center gap-1 rounded border bg-muted px-1.5 font-mono text-[10px] font-medium opacity-100">
                     <span className="text-xs">⌘</span>K
                   </kbd>
                 </Button>
               </div>
               <ThemeToggle className="static" />
-              <Button 
-                variant="ghost" 
-                size="icon" 
+              <Button
+                variant="ghost"
+                size="icon"
                 className="relative group rounded-full"
                 onClick={() => setCartOpen(true)}
               >
