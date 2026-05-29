@@ -4,7 +4,7 @@
  */
  {
 	"$schema": "node_modules/wrangler/config-schema.json",
-	"name": "chichaven-atelier-ucehpp7dk1e69g6oivbdq",
+	"name": "chichaven-atelier-moda-e-acess-rios-de-alta-convers-o",
 	"main": "worker/index.ts",
 	"compatibility_date": "2025-04-24",
 	"assets": {
