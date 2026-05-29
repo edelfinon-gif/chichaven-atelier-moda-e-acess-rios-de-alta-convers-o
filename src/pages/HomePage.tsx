@@ -1,138 +1,116 @@
-// Home page of the app.
-// Currently a demo placeholder "please wait" screen.
-// Replace this file with your actual app UI. Do not delete it to use some other file as homepage. Simply replace the entire contents of this file.
-
-import { useEffect, useMemo, useState } from 'react'
-import { Sparkles } from 'lucide-react'
-
-import { ThemeToggle } from '@/components/ThemeToggle'
-import { HAS_TEMPLATE_DEMO, TemplateDemo } from '@/components/TemplateDemo'
-import { Button } from '@/components/ui/button'
-import { Toaster, toast } from '@/components/ui/sonner'
-
-function formatDuration(ms: number): string {
-  const total = Math.max(0, Math.floor(ms / 1000))
-  const m = Math.floor(total / 60)
-  const s = total % 60
-  return `${m}:${s.toString().padStart(2, '0')}`
-}
-
+import React, { useEffect, useState } from 'react';
+import { motion } from 'framer-motion';
+import { ShoppingBag, ArrowRight, Loader2 } from 'lucide-react';
+import { MainLayout } from '@/components/layout/MainLayout';
+import { Button } from '@/components/ui/button';
+import { ProductCard } from '@/components/product-card';
+import { ProductFilters } from '@/components/product-filters';
+import { Product } from '@shared/types';
+import { api } from '@/lib/api-client';
 export function HomePage() {
-  const [coins, setCoins] = useState(0)
-  const [isRunning, setIsRunning] = useState(false)
-  const [startedAt, setStartedAt] = useState<number | null>(null)
-  const [elapsedMs, setElapsedMs] = useState(0)
-
+  const [products, setProducts] = useState<Product[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   useEffect(() => {
-    if (!isRunning || startedAt === null) return
-
-    const t = setInterval(() => {
-      setElapsedMs(Date.now() - startedAt)
-    }, 250)
-
-    return () => clearInterval(t)
-  }, [isRunning, startedAt])
-
-  const formatted = useMemo(() => formatDuration(elapsedMs), [elapsedMs])
-
-  const onPleaseWait = () => {
-    setCoins((c) => c + 1)
-
-    if (!isRunning) {
-      // Resume from the current elapsed time
-      setStartedAt(Date.now() - elapsedMs)
-      setIsRunning(true)
-      toast.success('Building your app…', {
-        description: "Hang tight — we're setting everything up.",
-      })
-      return
+    async function fetchProducts() {
+      try {
+        setLoading(true);
+        const data = await api<{ items: Product[] }>('/api/products');
+        setProducts(data.items);
+      } catch (err) {
+        console.error(err);
+        setError('Failed to load products');
+      } finally {
+        setLoading(false);
+      }
     }
-
-    setIsRunning(false)
-    toast.info('Still working…', {
-      description: 'You can come back in a moment.',
-    })
-  }
-
-  const onReset = () => {
-    setCoins(0)
-    setIsRunning(false)
-    setStartedAt(null)
-    setElapsedMs(0)
-    toast('Reset complete')
-  }
-
-  const onAddCoin = () => {
-    setCoins((c) => c + 1)
-    toast('Coin added')
-  }
-
+    fetchProducts();
+  }, []);
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-background text-foreground p-4 overflow-hidden relative">
-      <ThemeToggle />
-      <div className="absolute inset-0 bg-gradient-rainbow opacity-10 dark:opacity-20 pointer-events-none" />
-
-      <div className="text-center space-y-8 relative z-10 animate-fade-in w-full">
-        <div className="flex justify-center">
-          <div className="w-16 h-16 rounded-2xl bg-gradient-primary flex items-center justify-center shadow-primary floating">
-            <Sparkles className="w-8 h-8 text-white rotating" />
-          </div>
+    <MainLayout>
+      {/* Hero Section */}
+      <section className="relative overflow-hidden section-gap">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+          <motion.div 
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.6 }}
+            className="space-y-8"
+          >
+            <div className="inline-flex items-center rounded-full px-3 py-1 text-sm font-medium bg-brand-primary/10 text-brand-primary ring-1 ring-inset ring-brand-primary/20">
+              New Collection 2024
+            </div>
+            <h1 className="text-display-lg">
+              Elegance Reimagined <br />
+              <span className="text-gradient">ChicHaven Atelier</span>
+            </h1>
+            <p className="text-lg text-muted-foreground max-w-lg">
+              Discover a curated selection of high-fashion clothing and accessories designed for those who appreciate the finer details of style and quality.
+            </p>
+            <div className="flex flex-wrap gap-4">
+              <Button size="lg" className="btn-gradient">
+                Shop Now <ArrowRight className="ml-2 h-5 w-5" />
+              </Button>
+              <Button size="lg" variant="outline">
+                View Lookbook
+              </Button>
+            </div>
+          </motion.div>
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.8, delay: 0.2 }}
+            className="relative aspect-[4/5] lg:aspect-square overflow-hidden rounded-2xl shadow-2xl"
+          >
+            <img 
+              src="https://images.unsplash.com/photo-1490481651871-ab68de25d43d?q=80&w=1200&auto=format&fit=crop" 
+              alt="Luxury Fashion" 
+              className="w-full h-full object-cover"
+            />
+          </motion.div>
         </div>
-
-        <div className="space-y-3">
-          <h1 className="text-5xl md:text-7xl font-display font-bold text-balance leading-tight">
-            Creating your <span className="text-gradient">app</span>
-          </h1>
-          <p className="text-lg md:text-xl text-muted-foreground max-w-xl mx-auto text-pretty">
-            Your application would be ready soon.
-          </p>
-        </div>
-
-        {HAS_TEMPLATE_DEMO ? (
-          <div className="max-w-5xl mx-auto text-left">
-            <TemplateDemo />
-          </div>
-        ) : (
-          <>
-            <div className="flex justify-center gap-4">
-              <Button
-                size="lg"
-                onClick={onPleaseWait}
-                className="btn-gradient px-8 py-4 text-lg font-semibold hover:-translate-y-0.5 transition-all duration-200"
-                aria-live="polite"
+      </section>
+      {/* Product Showcase Section */}
+      <section className="section-gap border-t border-border" id="shop">
+        <div className="flex flex-col md:flex-row gap-12">
+          {/* Filters - Persistent on Desktop */}
+          <aside className="w-full md:w-64 shrink-0">
+            <ProductFilters />
+          </aside>
+          {/* Grid */}
+          <div className="flex-1 space-y-8">
+            <div className="flex items-center justify-between">
+              <h2 className="text-3xl font-bold">Featured Collection</h2>
+              <p className="text-sm text-muted-foreground">{products.length} products</p>
+            </div>
+            {loading ? (
+              <div className="flex flex-col items-center justify-center py-24 space-y-4">
+                <Loader2 className="h-10 w-10 animate-spin text-brand-primary" />
+                <p className="text-muted-foreground">Tailoring your experience...</p>
+              </div>
+            ) : error ? (
+              <div className="text-center py-24 text-destructive font-medium">{error}</div>
+            ) : (
+              <motion.div 
+                initial="hidden"
+                animate="visible"
+                variants={{
+                  hidden: { opacity: 0 },
+                  visible: {
+                    opacity: 1,
+                    transition: { staggerChildren: 0.1 }
+                  }
+                }}
+                className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-8"
               >
-                Please Wait
-              </Button>
-            </div>
-
-            <div className="flex items-center justify-center gap-6 text-sm text-muted-foreground">
-              <div>
-                Time elapsed:{' '}
-                <span className="font-medium tabular-nums text-foreground">{formatted}</span>
-              </div>
-              <div>
-                Coins:{' '}
-                <span className="font-medium tabular-nums text-foreground">{coins}</span>
-              </div>
-            </div>
-
-            <div className="flex justify-center gap-2">
-              <Button variant="outline" size="sm" onClick={onReset}>
-                Reset
-              </Button>
-              <Button variant="outline" size="sm" onClick={onAddCoin}>
-                Add Coin
-              </Button>
-            </div>
-          </>
-        )}
-      </div>
-
-      <footer className="absolute bottom-8 text-center text-muted-foreground/80">
-        <p>Powered by Cloudflare</p>
-      </footer>
-
-      <Toaster richColors closeButton />
-    </div>
-  )
+                {products.map((product) => (
+                  <ProductCard key={product.id} product={product} />
+                ))}
+              </motion.div>
+            )}
+          </div>
+        </div>
+      </section>
+    </MainLayout>
+  );
 }
