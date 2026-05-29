@@ -1,6 +1,6 @@
 # Chichaven Atelier
 
-[cloudflarebutton]
+[![Deploy to Cloudflare](https://deploy.workers.cloudflare.com/button)](https://deploy.workers.cloudflare.com/?url=https://github.com/edelfinon-gif/chichaven-atelier-moda-e-acess-rios-de-alta-convers-o)
 
 A modern full-stack application template built with React and Cloudflare Workers, featuring real-time state management via Durable Objects, a beautiful shadcn/ui frontend, and seamless deployment to the Cloudflare edge.
 
@@ -63,7 +63,7 @@ bun run deploy
 
 This runs the build and deploys using Wrangler.
 
-[cloudflarebutton]
+[![Deploy to Cloudflare](https://deploy.workers.cloudflare.com/button)](https://deploy.workers.cloudflare.com/?url=https://github.com/edelfinon-gif/chichaven-atelier-moda-e-acess-rios-de-alta-convers-o)
 
 ## Project Structure
 
