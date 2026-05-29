@@ -1,6 +1,6 @@
 import React, { forwardRef } from 'react';
 import { Link } from 'react-router-dom';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { ShoppingCart, Eye, Plus, Heart } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -40,19 +40,21 @@ export const ProductCard = forwardRef<HTMLDivElement, ProductCardProps>(({ produ
       className="group"
     >
       <Card className="overflow-hidden border-none shadow-soft hover:shadow-2xl transition-all duration-500 bg-card rounded-2xl">
-        <Link to={`/product/${product.id}`} className="block relative aspect-[3/4] overflow-hidden">
-          <img
-            src={product.imageUrl}
-            alt={product.name}
-            className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110"
-          />
-          <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-all duration-300 flex items-center justify-center gap-4">
-            <Button size="icon" variant="secondary" asChild className="rounded-full shadow-xl translate-y-4 group-hover:translate-y-0 transition-all duration-300 delay-75">
+        <div className="relative aspect-[3/4] overflow-hidden">
+          <Link to={`/product/${product.id}`} className="block h-full w-full">
+            <img
+              src={product.imageUrl}
+              alt={product.name}
+              className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110"
+            />
+          </Link>
+          <div className="absolute inset-0 pointer-events-none bg-black/40 opacity-0 group-hover:opacity-100 transition-all duration-300 flex items-center justify-center gap-4">
+            <Button size="icon" variant="secondary" asChild className="pointer-events-auto rounded-full shadow-xl translate-y-4 group-hover:translate-y-0 transition-all duration-300 delay-75">
               <Link to={`/product/${product.id}`}><Eye className="h-5 w-5" /></Link>
             </Button>
             <Button
               size="icon"
-              className="rounded-full btn-gradient shadow-xl translate-y-4 group-hover:translate-y-0 transition-all duration-300 delay-150"
+              className="pointer-events-auto rounded-full btn-gradient shadow-xl translate-y-4 group-hover:translate-y-0 transition-all duration-300 delay-150"
               onClick={handleAddToCart}
             >
               <ShoppingCart className="h-5 w-5" />
@@ -79,12 +81,12 @@ export const ProductCard = forwardRef<HTMLDivElement, ProductCardProps>(({ produ
                 </motion.div>
              </Button>
           </div>
-        </Link>
+        </div>
         <CardContent className="p-6 space-y-3">
           <div className="flex items-start justify-between gap-4">
             <div className="min-w-0 flex-1">
               <p className="text-[10px] font-black text-muted-foreground uppercase tracking-[0.2em] mb-1">{product.category}</p>
-              <Link to={`/product/${product.id}`} className="hover:text-brand-primary transition-colors">
+              <Link to={`/product/${product.id}`} className="hover:text-brand-primary transition-colors block">
                 <h3 className="text-lg font-bold line-clamp-1 leading-tight">{product.name}</h3>
               </Link>
             </div>

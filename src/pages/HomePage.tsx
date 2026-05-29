@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence, type Variants } from 'framer-motion';
 import { ArrowRight, ChevronDown } from 'lucide-react';
 import { MainLayout } from '@/components/layout/MainLayout';
 import { Button } from '@/components/ui/button';
@@ -40,9 +40,10 @@ export function HomePage() {
         if (sortBy === 'price-low') filtered.sort((a, b) => a.price - b.price);
         if (sortBy === 'price-high') filtered.sort((a, b) => b.price - a.price);
         setProducts(filtered);
+        setError(null);
       } catch (err) {
-        console.error(err);
-        setError('Falha ao carregar produtos');
+        console.error('[HOMEPAGE FETCH ERROR]', err);
+        setError(err instanceof Error ? err.message : 'Falha ao carregar produtos. Verifique sua conexão.');
       } finally {
         setLoading(false);
       }
@@ -67,7 +68,7 @@ export function HomePage() {
     'price-low': 'Menor Preço',
     'price-high': 'Maior Preço'
   };
-  const heroContainer = {
+  const heroContainer: Variants = {
     hidden: { opacity: 0 },
     show: {
       opacity: 1,
@@ -76,15 +77,22 @@ export function HomePage() {
       }
     }
   };
-  const heroItem = {
+  const heroItem: Variants = {
     hidden: { opacity: 0, y: 30 },
-    show: { opacity: 1, y: 0, transition: { duration: 0.8, ease: "easeOut" } }
+    show: { 
+      opacity: 1, 
+      y: 0, 
+      transition: { 
+        duration: 0.8, 
+        ease: [0.22, 1, 0.36, 1] 
+      } 
+    }
   };
   return (
     <MainLayout>
       <section className="relative overflow-hidden py-12 md:py-20 lg:py-24">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center">
-          <motion.div 
+          <motion.div
             variants={heroContainer}
             initial="hidden"
             animate="show"
@@ -107,16 +115,16 @@ export function HomePage() {
               <Button size="lg" variant="outline" className="px-8 h-14 text-md">Ver Lookbook</Button>
             </motion.div>
           </motion.div>
-          <motion.div 
-            initial={{ opacity: 0, scale: 0.9 }} 
-            animate={{ opacity: 1, scale: 1 }} 
-            transition={{ duration: 1.2, ease: "easeOut" }} 
+          <motion.div
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 1.2, ease: [0.22, 1, 0.36, 1] }}
             className="relative aspect-square lg:aspect-square overflow-hidden rounded-3xl shadow-2xl group"
           >
-            <img 
-              src="https://images.unsplash.com/photo-1490481651871-ab68de25d43d?q=80&w=1200&auto=format&fit=crop" 
-              alt="Moda de Luxo" 
-              className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105" 
+            <img
+              src="https://images.unsplash.com/photo-1490481651871-ab68de25d43d?q=80&w=1200&auto=format&fit=crop"
+              alt="Moda de Luxo"
+              className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105"
             />
             <div className="absolute inset-0 ring-1 ring-inset ring-black/10 rounded-3xl" />
           </motion.div>
