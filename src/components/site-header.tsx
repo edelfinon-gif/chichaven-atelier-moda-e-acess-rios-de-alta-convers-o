@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { motion, useScroll, useTransform } from 'framer-motion';
+import { motion, useScroll, useMotionValueEvent } from 'framer-motion';
 import { ShoppingBag, Search, Menu } from 'lucide-react';
 import { ThemeToggle } from '@/components/ThemeToggle';
 import { Button } from '@/components/ui/button';
@@ -11,17 +11,23 @@ import { useCartStore } from '@/lib/store';
 export function SiteHeader() {
   const [searchOpen, setSearchOpen] = useState(false);
   const [cartOpen, setCartOpen] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
   const location = useLocation();
   const { scrollY } = useScroll();
-  const totalQuantity = useCartStore((s) => s.items.reduce((acc, item) => acc + item.quantity, 0));
-  const headerHeight = useTransform(scrollY, [0, 100], ["5rem", "4rem"]);
-  const headerBg = useTransform(scrollY, [0, 100], ["rgba(255,255,255,0.8)", "rgba(255,255,255,0.95)"]);
-  const headerBlur = useTransform(scrollY, [0, 100], ["8px", "12px"]);
+  const items = useCartStore((s) => s.items);
+  const totalQuantity = items.reduce((acc, item) => acc + item.quantity, 0);
+  useMotionValueEvent(scrollY, "change", (latest) => {
+    setIsScrolled(latest > 50);
+  });
   return (
     <>
-      <motion.header
-        style={{ height: headerHeight, backgroundColor: headerBg, backdropFilter: `blur(${headerBlur})` }}
-        className="sticky top-0 z-40 w-full border-b border-border transition-colors duration-300"
+      <header
+        className={cn(
+          "sticky top-0 z-40 w-full border-b transition-all duration-300",
+          isScrolled 
+            ? "h-16 bg-background/95 backdrop-blur-md border-border shadow-sm" 
+            : "h-20 bg-background border-transparent"
+        )}
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-full">
           <div className="flex h-full items-center justify-between">
@@ -88,7 +94,7 @@ export function SiteHeader() {
             </div>
           </div>
         </div>
-      </motion.header>
+      </header>
       <SearchDialog open={searchOpen} onOpenChange={setSearchOpen} />
       <CartDrawer open={cartOpen} onOpenChange={setCartOpen} />
     </>
