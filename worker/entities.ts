@@ -7,31 +7,17 @@ export class UserEntity extends IndexedEntity<User> {
   static readonly initialState: User = { id: "", name: "" };
   static seedData = MOCK_USERS;
 }
-export type ChatBoardState = Chat & { messages: ChatMessage[] };
-const SEED_CHAT_BOARDS: ChatBoardState[] = MOCK_CHATS.map(c => ({
-  ...c,
-  messages: MOCK_CHAT_MESSAGES.filter(m => m.chatId === c.id),
-}));
-export class ChatBoardEntity extends IndexedEntity<ChatBoardState> {
-  static readonly entityName = "chat";
-  static readonly indexName = "chats";
-  static readonly initialState: ChatBoardState = { id: "", title: "", messages: [] };
-  static seedData = SEED_CHAT_BOARDS;
-  async listMessages(): Promise<ChatMessage[]> {
-    const { messages } = await this.getState();
-    return messages;
-  }
-  async sendMessage(userId: string, text: string): Promise<ChatMessage> {
-    const msg: ChatMessage = { id: crypto.randomUUID(), chatId: this.id, userId, text, ts: Date.now() };
-    await this.mutate(s => ({ ...s, messages: [...s.messages, msg] }));
-    return msg;
-  }
+export type WishlistState = { id: string; productIds: string[] };
+export class WishlistEntity extends IndexedEntity<WishlistState> {
+  static readonly entityName = "wishlist";
+  static readonly indexName = "wishlists";
+  static readonly initialState: WishlistState = { id: "", productIds: [] };
 }
 export class ProductEntity extends IndexedEntity<Product> {
   static readonly entityName = "product";
   static readonly indexName = "products";
-  static readonly initialState: Product = { 
-    id: "", name: "", description: "", price: 0, imageUrl: "", category: "", brand: "", colors: [] 
+  static readonly initialState: Product = {
+    id: "", name: "", description: "", price: 0, imageUrl: "", category: "", brand: "", colors: []
   };
   static seedData = MOCK_PRODUCTS;
 }
