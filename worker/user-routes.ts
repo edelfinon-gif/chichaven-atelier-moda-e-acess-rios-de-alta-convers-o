@@ -8,12 +8,16 @@ export function userRoutes(app: Hono<{ Bindings: Env }>) {
     await ProductEntity.ensureSeed(c.env);
     const cursor = c.req.query('cursor');
     const category = c.req.query('category');
+    const brand = c.req.query('brand');
     const priceMin = c.req.query('priceMin');
     const priceMax = c.req.query('priceMax');
     const result = await ProductEntity.list(c.env, cursor ?? null);
     let filteredItems = result.items;
-    if (category) {
+    if (category && category !== 'all') {
       filteredItems = filteredItems.filter(p => p.category.toLowerCase() === category.toLowerCase());
+    }
+    if (brand && brand !== 'all') {
+      filteredItems = filteredItems.filter(p => p.brand.toLowerCase() === brand.toLowerCase());
     }
     if (priceMin) {
       filteredItems = filteredItems.filter(p => p.price >= Number(priceMin));

@@ -30,6 +30,7 @@ export function HomePage() {
         setLoading(true);
         const params = new URLSearchParams();
         if (category !== 'all') params.append('category', category);
+        if (brand !== 'all') params.append('brand', brand);
         if (priceRange[0] > 0) params.append('priceMin', priceRange[0].toString());
         if (priceRange[1] < 1000) params.append('priceMax', priceRange[1].toString());
         const data = await api<{ items: Product[] }>(`/api/products?${params.toString()}`);
@@ -49,7 +50,7 @@ export function HomePage() {
       }
     }
     fetchProducts();
-  }, [category, priceRange, color, sortBy]);
+  }, [category, brand, priceRange, color, sortBy]);
   const clearFilters = () => {
     setCategory('all');
     setPriceRange([0, 1000]);
@@ -79,13 +80,13 @@ export function HomePage() {
   };
   const heroItem: Variants = {
     hidden: { opacity: 0, y: 30 },
-    show: { 
-      opacity: 1, 
-      y: 0, 
-      transition: { 
-        duration: 0.8, 
-        ease: [0.22, 1, 0.36, 1] 
-      } 
+    show: {
+      opacity: 1,
+      y: 0,
+      transition: {
+        duration: 0.8,
+        ease: [0.22, 1, 0.36, 1]
+      }
     }
   };
   return (
