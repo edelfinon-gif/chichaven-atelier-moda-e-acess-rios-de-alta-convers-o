@@ -39,6 +39,13 @@ export function ProductFilters({
     { label: 'Tricô', value: 'tricô' },
     { label: 'Acessórios', value: 'acessórios' }
   ];
+  const brands = [
+    { label: 'Todas', value: 'all' },
+    { label: 'ChicAtelier', value: 'chicatelier' },
+    { label: 'UrbanEdge', value: 'urbanedge' },
+    { label: 'SilkRoad', value: 'silkroad' },
+    { label: 'Heritage', value: 'heritage' }
+  ];
   return (
     <div className="space-y-8">
       <div className="flex items-center justify-between">
@@ -50,7 +57,7 @@ export function ProductFilters({
         )}
       </div>
       <div>
-        <h4 className="text-xs font-semibold mb-4 text-muted-foreground uppercase">Categorias</h4>
+        <h4 className="text-xs font-semibold mb-4 text-muted-foreground uppercase tracking-widest">Categorias</h4>
         <RadioGroup value={category} onValueChange={onCategoryChange} className="space-y-2.5">
           {categories.map((cat) => (
             <div key={cat.value} className="flex items-center space-x-3">
@@ -64,7 +71,21 @@ export function ProductFilters({
       </div>
       <Separator />
       <div>
-        <h4 className="text-xs font-semibold mb-4 text-muted-foreground uppercase">Faixa de Preço</h4>
+        <h4 className="text-xs font-semibold mb-4 text-muted-foreground uppercase tracking-widest">Marcas</h4>
+        <RadioGroup value={brand} onValueChange={onBrandChange} className="space-y-2.5">
+          {brands.map((b) => (
+            <div key={b.value} className="flex items-center space-x-3">
+              <RadioGroupItem value={b.value} id={`brand-${b.value}`} className="border-brand-primary text-brand-primary" />
+              <Label htmlFor={`brand-${b.value}`} className="text-sm font-medium cursor-pointer hover:text-brand-primary transition-colors">
+                {b.label}
+              </Label>
+            </div>
+          ))}
+        </RadioGroup>
+      </div>
+      <Separator />
+      <div>
+        <h4 className="text-xs font-semibold mb-4 text-muted-foreground uppercase tracking-widest">Faixa de Preço</h4>
         <div className="px-2">
           <Slider
             value={[safeRange[0], safeRange[1]]}
@@ -81,7 +102,7 @@ export function ProductFilters({
       </div>
       <Separator />
       <div>
-        <h4 className="text-xs font-semibold mb-4 text-muted-foreground uppercase">Cores</h4>
+        <h4 className="text-xs font-semibold mb-4 text-muted-foreground uppercase tracking-widest">Cores</h4>
         <div className="flex flex-wrap gap-2.5">
           {['#000000', '#FFFFFF', '#8B4513', '#A52A2A', '#000080', '#800000', '#F5F5DC'].map((c) => (
             <button
